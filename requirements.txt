@@ -1,0 +1,7 @@
+fastapi
+flask 
+uvicorn 
+mysql-connector-python 
+sqlalchemy
+pymysql 
+flask-sqlalchemy
