@@ -143,3 +143,20 @@ cd .. && npm run start     # runs backend + frontend together
 
 ✅ Verify MySQL User Permissions (Optional):
 SELECT user, host FROM mysql.user;
+
+
+
+📄 2. Swagger JSON Export
+FastAPI serves Swagger schema at /openapi.json.
+
+curl http://localhost:8000/openapi.json -o swagger_schema.json
+
+http://localhost:8000/openapi.json
+
+
+🧰 Bonus: Convert Swagger JSON to Postman Collection
+You can import openapi.json directly into Postman:
+
+Open Postman → Import → File → Select swagger_schema.json
+
+Or use online tool: https://www.apimatic.io/transformer

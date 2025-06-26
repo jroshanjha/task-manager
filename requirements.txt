@@ -5,3 +5,7 @@ mysql-connector-python
 sqlalchemy
 pymysql 
 flask-sqlalchemy
+dotenv
+pydantic[dotenv] 
+pydantic[email]
+fastapi[all]

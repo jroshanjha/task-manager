@@ -1,35 +1,65 @@
-version: '3.9'
+# version: '3.9'
+
+# services:
+#   mysql:
+#     image: mysql:8
+#     environment:
+#       MYSQL_ROOT_PASSWORD: jroshan%4098
+#       MYSQL_DATABASE: taskdb
+#     ports:
+#       - "3306:3306"
+#     volumes:
+#       - mysql_data:/var/lib/mysql
+
+#   backend:
+#     build: ./backend
+#     ports:
+#       - "5000:5000"
+#     env_file:
+#       - ./backend/.env
+#     depends_on:
+#       - mysql
+
+#   frontend:
+#     build: ./frontend
+#     ports:
+#       - "3000:3000"
+#     stdin_open: true
+#     tty: true
+#     environment:
+#       - CHOKIDAR_USEPOLLING=true
+#     depends_on:
+#       - backend
+
+# volumes:
+#   mysql_data:
+
+# ⚙️ docker-compose.yml (with MySQL)
+
+version: "3.9"
 
 services:
-  mysql:
-    image: mysql:8
+  db:
+    image: mysql:8.0
+    restart: always
     environment:
+      MYSQL_DATABASE: testdb
+      MYSQL_USER: root
+      MYSQL_PASSWORD: jroshan%4098
       MYSQL_ROOT_PASSWORD: jroshan%4098
-      MYSQL_DATABASE: taskdb
     ports:
       - "3306:3306"
     volumes:
-      - mysql_data:/var/lib/mysql
+      - db_data:/var/lib/mysql
 
-  backend:
-    build: ./backend
+  fastapi:
+    build: .
     ports:
-      - "5000:5000"
-    env_file:
-      - ./backend/.env
+      - "8000:8000"
     depends_on:
-      - mysql
-
-  frontend:
-    build: ./frontend
-    ports:
-      - "3000:3000"
-    stdin_open: true
-    tty: true
+      - db
     environment:
-      - CHOKIDAR_USEPOLLING=true
-    depends_on:
-      - backend
+      DATABASE_URL: mysql+pymysql://root:jroshan%4098@db/testdb
 
 volumes:
-  mysql_data:
+  db_data:
