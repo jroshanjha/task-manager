@@ -12,11 +12,18 @@ class UserCreate(BaseModel):
             raise ValueError('Name must contain only letters and spaces')
         return v
 
-class UserOut(UserCreate):
-    id: int
+# class UserOut(UserCreate):
+#     id: int
 
-    class Config:
-        orm_mode = True
+#     class Config:
+#         orm_mode = True
+class UserOut(BaseModel):
+    id: int
+    name: str
+
+    model_config = {
+        "from_attributes": True
+    }
 
 
 # class UserLogin(BaseModel):
