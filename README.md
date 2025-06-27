@@ -139,3 +139,60 @@ curl -X 'DELETE' \
 
 # Flask 
 http://127.0.0.1:5000
+
+
+# FAST API 
+
+# CREATE user
+curl -X POST "http://localhost:8000/users/" \
+-H "Content-Type: application/json" \
+-d '{
+    "name": "John Doe",
+    "email": "john@example.com",
+    "age": 30
+}'
+
+# GET all users
+curl -X GET "http://localhost:8000/users/"
+
+# GET user by ID
+curl -X GET "http://localhost:8000/users/1"
+
+# UPDATE user
+curl -X PUT "http://localhost:8000/users/1" \
+-H "Content-Type: application/json" \
+-d '{
+    "name": "John Updated",
+    "age": 31
+}'
+
+# DELETE user
+curl -X DELETE "http://localhost:8000/users/1"
+
+Flask API 
+
+# CREATE user
+curl -X POST "http://localhost:5000/users" \
+-H "Content-Type: application/json" \
+-d '{
+    "name": "Jane Doe",
+    "email": "jane@example.com",
+    "age": 25
+}'
+
+# GET all users
+curl -X GET "http://localhost:5000/users"
+
+# GET user by ID
+curl -X GET "http://localhost:5000/users/1"
+
+# UPDATE user
+curl -X PUT "http://localhost:5000/users/1" \
+-H "Content-Type: application/json" \
+-d '{
+    "name": "Jane Updated",
+    "age": 26
+}'
+
+# DELETE user
+curl -X DELETE "http://localhost:5000/users/1"
