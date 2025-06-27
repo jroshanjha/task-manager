@@ -1,12 +1,18 @@
 from sqlalchemy import Column, Integer, String,ForeignKey, DateTime
 from datetime import datetime
-from .database import Base
+from app.database import Base
 
 class User(Base):
     __tablename__ = "users"
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String(100))
     email = Column(String(100), unique=True, index=True)
+    
+class UserLogin(Base):
+    __tablename__ = "user_logins"
+    id = Column(Integer, primary_key=True, index=True)
+    email = Column(String(100), unique=True, index=True)
+    password = Column(String(100))
 
 # class Product(Base):
 #     __tablename__ = "products"

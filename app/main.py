@@ -1,14 +1,17 @@
 from fastapi import FastAPI, Depends, HTTPException
 from sqlalchemy.orm import Session
-from . import models, schemas, crud
-from .database import SessionLocal, engine
+# from app import models, schemas, crud
+from app import models, schemas, crud
+from app.database import SessionLocal, engine
 import sys
 import os
+from fastapi.responses import RedirectResponse
+from typing import List
 models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
 
-sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+#sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 def get_db():
     db = SessionLocal()
@@ -19,7 +22,7 @@ def get_db():
 def create(user: schemas.UserCreate, db: Session = Depends(get_db)):
     return crud.create_user(db, user)
 
-@app.get("/users/", response_model=list[schemas.UserOut])
+@app.get("/users/", response_model=List[schemas.UserOut])
 def read_all(db: Session = Depends(get_db)):
     return crud.get_users(db)
 
@@ -32,11 +35,60 @@ def read_user(user_id: int, db: Session = Depends(get_db)):
 
 @app.put("/users/{user_id}")
 def update(user_id: int, user: schemas.UserCreate, db: Session = Depends(get_db)):
-    return crud.update_user(db, user_id, user)
+    updated = crud.update_user(db, user_id, user)
+    if not updated:
+        raise HTTPException(status_code=404, detail="User not found")
+    return updated
 
 @app.delete("/users/{user_id}")
 def delete(user_id: int, db: Session = Depends(get_db)):
-    return crud.delete_user(db, user_id)
+    deleted = crud.delete_user(db, user_id)
+    if not deleted:
+        raise HTTPException(status_code=404, detail="User not found")
+    return {"message": "User deleted"}
+
+# @app.post("/login")
+# async def login(username: str = Form(...), password: str = Form(...)):
+#     # ✅ Replace with real authentication logic:
+#     if username == "admin" and password == "secret":
+#         # On successful login, redirect to /dashboard
+#         return RedirectResponse(url="/dashboard", status_code=302)
+#     else:
+#         return {"error": "Invalid credentials"}
+
+# @app.post("/login")
+# async def login(username: str = Form(...), password: str = Form(...)):
+#     if username == "admin" and password == "secret":
+#         return RedirectResponse(url="https://www.google.com", status_code=302)
+#     return {"error": "Invalid credentials"}
+    
+@app.post("/login/", response_model=schemas.UserLoginOut)
+def login(user: schemas.UserLogin, db: Session = Depends(get_db)):
+    existing_user = crud.user_login(db, user)
+    if not existing_user:
+        raise HTTPException(status_code=404, detail="Invalid credentials")
+    return existing_user
+
+    # ✅ Redirect on successful login
+    #return RedirectResponse(url=f"/users/{existing_user.id}", status_code=302)
+    
+
+@app.post("/register/", response_model=schemas.UserLoginOut)
+def register(user: schemas.UserLogin, db: Session = Depends(get_db)):
+    try:
+        created_user = crud.user_register(db, user)
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    # if not created_user:
+    #     raise HTTPException(status_code=400, detail="Registration failed")
+    return created_user
+
+    # crud.user_register(db,user)
+    # On successful registration, redirect to /login
+    #return RedirectResponse(url="/login", status_code=302)
+
+
+
 
 # @app.post("/tasks/", response_model=schemas.TaskOut)
 # def create_task(task: schemas.TaskCreate, user_id: int, db: Session = Depends(get_db)):

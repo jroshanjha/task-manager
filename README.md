@@ -11,6 +11,9 @@ pip install -r requirements.txt
 # ▶️ Run FastAPI:
 uvicorn main:app --reload
 
+python -m app.main
+uvicorn app.main:app --reload
+
 # Request URL => GET
 http://127.0.0.1:8000/users/ 
 
